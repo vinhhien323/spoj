@@ -1,0 +1,55 @@
+#include <iostream>
+#include <bits/stdc++.h>
+#define fo(i,m,n) for(int i = m; i <= n; i++)
+#define fod(i,m,n) for(int i = m; i >= n; i--)
+using namespace std;
+const int inf = 2e9;
+const int N = 10e6+2;
+int a[N], deq[N], top, n;
+int R[N], L[N];
+void X()
+{
+    a[0] = -inf;
+    top = 1;
+    L[1] = 1;
+    deq[1] = 1;
+    fo(i,2,n)
+    {
+        while(top >= 0 && a[deq[top]] >= a[i]) top--;
+        L[i] = deq[top] + 1;
+        deq[++top] = i;
+    }
+}
+void Y()
+{
+    a[n+1] = -inf;
+    top =  1;
+    R[n] = n;
+    deq[1] = n;
+    deq[0] = n+ 1;
+    fod(i,n-1,1)
+    {
+        while(top >= 0 && a[deq[top]] >= a[i]) top--;
+        R[i] = deq[top] -1;
+        deq[++top] = i;
+    }
+}
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    //freopen("input.txt","r",stdin);
+    cin >> n;
+    fo(i,1,n) cin >> a[i];
+    X();
+    Y();
+    int maxx = -inf;
+    fo(i,1,n)
+    {
+        //cout << a[i] << " " << L[i] << " " << R[i] << endl;
+        if(a[i] <= R[i] - L[i] + 1) maxx = max(maxx,a[i]);
+        //maxx = max(maxx,min(a[i],R[i]-L[i]+1));
+    }
+    cout << maxx;
+    return 0;
+}
+ 
