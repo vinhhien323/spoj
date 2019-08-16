@@ -1,0 +1,68 @@
+#include <iostream>
+#include <fstream>
+#include <bits/stdc++.h>
+#define fo(i,m,n) for(int i = m; i <= n; i++)
+using namespace std;
+typedef uint64_t ull;
+typedef pair<int ,int> _ii;
+struct U
+{
+    vector<_ii> Edge;
+};
+int n, m;
+U u[5001];
+ull d[5001];
+ull t[5001];
+bool visited[5001];
+priority_queue<_ii,vector<_ii>,greater<_ii> > Line;
+void Input()
+{
+    scanf("%d %d",&n,&m);
+    fo(i,1,m)
+    {
+        int a,b,c,d;
+        scanf("%d %d %d %d",&a,&b,&c,&d);
+        u[b].Edge.push_back(make_pair(c,d));
+        if(a == 2) u[c].Edge.push_back(make_pair(b,d));
+    }
+}
+void Dij()
+{
+    fo(i,2,n) d[i] = 10e21;
+    d[1] = 0;
+    t[1] = 1;
+    Line.push(make_pair(0,1));
+    while(!Line.empty())
+    {
+        ull D,i;
+        D = Line.top().first;
+        i = Line.top().second;
+        Line.pop();
+        if(visited[i] == false)
+        {
+            if(i == n) return;
+            visited[i] = true;
+            for(int j = 0; j <= (int)u[i].Edge.size()-1;j++)
+            {
+                int v = u[i].Edge[j].first;
+                int c = u[i].Edge[j].second;
+                if(d[v] > D + c)
+                {
+                    d[v] = D+c;
+                    Line.push(make_pair(d[v],v));
+                    t[v] = t[i];
+                }
+                else if(d[v] == D + c) t[v] +=t[i];
+            }
+        }
+    }
+}
+int main()
+{
+    //freopen("input.txt","r",stdin);
+    Input();
+    Dij();
+   // fo(i,1,n) cout << t[i]<< endl;
+    cout << d[n] << " " << t[n];
+    return 0;
+} 
