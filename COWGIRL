@@ -1,0 +1,57 @@
+#include <iostream>
+#include <bits/stdc++.h>
+#define fo(i,m,n) for( int i = m; i <= n; i++)
+using namespace std;
+typedef int64_t i64;
+const int M = 30;
+const int N = 1 << 5;
+i64 t,m,n,ans;
+i64 f[M][N];
+bool Check(int bit1, int bit2)
+{
+    fo(i,0,n-2)
+    {
+        int a = (bit1 >> i) & 1;
+        int b = (bit2 >> i) & 1;
+        int c = (bit1 >> (i+1)) & 1;
+        int d = (bit2 >> (i+1)) & 1;
+        if(a == b && b == c && c == d) return false;
+    }
+    return true;
+}
+void Run()
+{
+    memset(f,0,sizeof(f));
+    if(m < n) swap(m,n);
+    fo(i,0,(1 << n)-1) f[0][i] = 1;
+    fo(i,1,m-1)
+    {
+        fo(bit,0,(1 << n)-1)
+        {
+            fo(prev_bit,0,(1 << n) - 1)
+            {
+                if(Check(bit,prev_bit))
+                {
+                    f[i][bit] += f[i-1][prev_bit];
+                    //cout << i << " " << bit << " " << prev_bit << " " << f[i][bit] << endl;
+                }
+            }
+        }
+    }
+    ans = 0;
+    fo(i,0,(1 << n) -1) ans += f[m-1][i];
+    cout << ans << "\n";
+}
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    //freopen("output.txt","w",stdout);
+    //freopen("input.txt","r",stdin);
+    cin >> t;
+    while(t--)
+    {
+        cin >> m >> n;
+        Run();
+    }
+    return 0;
+}
